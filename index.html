@@ -176,7 +176,7 @@
                 </div>
                 <h2 class="text-xl font-bold text-white mb-2 font-classic">Circuit Condiționare</h2>
                 <p class="text-gray-300 text-sm leading-relaxed mb-4 flex-grow">
-                    Proiectarea etajului analogic (LM358), calcule rezistențe și simulare interactivă Proteus.
+                    Proiectarea etajului analogic (MCP6022 / LMC6482, rail-to-rail), calcule rezistențe și simulare interactivă Proteus.
                 </p>
                 <span class="text-blue-400 text-xs font-bold uppercase tracking-wider flex items-center mt-auto">
                     Deschide <svg class="w-4 h-4 ml-1 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
@@ -767,7 +767,7 @@
                 </div>
                 <span class="font-bold tracking-tight text-gray-400 font-classic">Controlere</span>
             </div>
-            <p>&copy; 2026. Documentație Termostat. Analogic, Digital & LCD.</p>
+            <p>&copy; 2026 <span class="text-gray-300 font-semibold">Alexandro Gadja</span> · UTCN, Electronică Aplicată. Documentație Termostat: Analogic, Digital &amp; LCD.</p>
         </div>
     </footer>
 
@@ -905,6 +905,65 @@
                 }
             }
         }
+
+        // Date pentru tabel - cu Pret curat de la 1 la 5
+        const senzori = [
+            { nume: "LM35", tip: "Semiconductor Liniar", pret: 1, err: "±0.5", prot: "Da" },
+            { nume: "TMP36", tip: "Semiconductor Liniar", pret: 1, err: "±2.0", prot: "Da" },
+            { nume: "LM34", tip: "Semiconductor Liniar", pret: 2, err: "±0.5", prot: "Da" },
+            { nume: "AD590", tip: "Semiconductor Liniar", pret: 5, err: "±0.5", prot: "Da" },
+            { nume: "LM335", tip: "Semiconductor Liniar", pret: 1, err: "±1.0", prot: "Da" },
+            { nume: "DS18B20", tip: "Semiconductor Digital", pret: 2, err: "±0.5", prot: "Da" },
+            { nume: "DHT22", tip: "Semiconductor Digital", pret: 2, err: "±0.5", prot: "Da" },
+            { nume: "MCP9808", tip: "Semiconductor Digital", pret: 3, err: "±0.25", prot: "Nu" },
+            { nume: "BME280", tip: "Semiconductor Digital", pret: 4, err: "±1.0", prot: "Nu" },
+            { nume: "LM75", tip: "Semiconductor Digital", pret: 2, err: "±2.0", prot: "Da" },
+            { nume: "NTC 10k", tip: "Termistor NTC", pret: 1, err: "±1.0", prot: "Da" },
+            { nume: "NTC 100k", tip: "Termistor NTC", pret: 1, err: "±1.0", prot: "Da" },
+            { nume: "PTC 1k", tip: "Termistor PTC", pret: 1, err: "±2.0", prot: "Da" },
+            { nume: "NTC 1k", tip: "Termistor NTC", pret: 1, err: "±1.0", prot: "Da" },
+            { nume: "KTY81", tip: "Termistor PTC (Si)", pret: 1, err: "±2.0", prot: "Da" },
+            { nume: "Pt100", tip: "RTD", pret: 4, err: "±0.1", prot: "Da" },
+            { nume: "Pt1000", tip: "RTD", pret: 4, err: "±0.1", prot: "Da" },
+            { nume: "Ni100", tip: "RTD", pret: 3, err: "±0.4", prot: "Da" },
+            { nume: "Ni1000", tip: "RTD", pret: 3, err: "±0.4", prot: "Da" },
+            { nume: "Cu50", tip: "RTD", pret: 3, err: "±0.5", prot: "Nu" },
+            { nume: "Termocuplu Tip K", tip: "Termocuplu", pret: 3, err: "±2.2", prot: "Nu" },
+            { nume: "Termocuplu Tip J", tip: "Termocuplu", pret: 3, err: "±2.2", prot: "Nu" },
+            { nume: "Termocuplu Tip T", tip: "Termocuplu", pret: 3, err: "±1.0", prot: "Nu" },
+            { nume: "Termocuplu Tip N", tip: "Termocuplu", pret: 3, err: "±2.2", prot: "Nu" },
+            { nume: "Termocuplu Tip S", tip: "Termocuplu", pret: 5, err: "±1.5", prot: "Nu" },
+        ];
+
+        // Construire Tabel
+        const tbody = document.getElementById('sensorTableBody');
+        senzori.forEach(s => {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-gray-50 transition";
+            
+            // Creare Buline Pret (Fix conform pozei)
+            let pretHTML = '<div class="flex space-x-1">';
+            for(let i = 1; i <= 5; i++) {
+                if(i <= s.pret) {
+                    pretHTML += `<div class="w-3 h-3 rounded-full bg-brandOrange"></div>`; // Plin
+                } else {
+                    pretHTML += `<div class="w-3 h-3 rounded-full bg-gray-200"></div>`; // Gol
+                }
+            }
+            pretHTML += '</div>';
+
+            const proteusColor = s.prot === "Da" ? "text-green-600 font-bold" : "text-gray-400";
+            const rowClass = s.nume === "LM35" ? "bg-orange-50 font-bold" : "";
+
+            tr.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 ${rowClass}">${s.nume}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 bg-gray-50 hidden sm:table-cell"><span class="px-2 py-1 rounded bg-white border border-gray-200">${s.tip}</span></td>
+                <td class="px-6 py-4 whitespace-nowrap">${pretHTML}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-mono">${s.err}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm ${proteusColor} hidden md:table-cell">${s.prot}</td>
+            `;
+            tbody.appendChild(tr);
+        });
     </script>
 </body>
 </html>
